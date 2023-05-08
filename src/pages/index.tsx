@@ -1,9 +1,11 @@
 import Image from "next/image";
-import PokemonProps from "../types/pokemon";
+import { PokemonProps } from "../types/pokemon";
 import { useEffect, useState, FormEvent } from "react";
 import api from "../utils/api";
 import Pokemon from "@/components/pokemon";
 import Pagination, { paginate } from "@/components/pagination";
+import Skeleton from "@/components/skeleton";
+import PokemonModal from "@/components/pokemonModal";
 
 export default function Home() {
   const [pokemons, setPokemons] = useState<PokemonProps[]>([]);
@@ -43,11 +45,15 @@ export default function Home() {
   useEffect(() => {
     async function getPokemons() {
       const firstGeneration = 151;
+      const offset = firstGeneration * 0;
 
       const response = await api
         .get(`?limit=${firstGeneration}`)
         .finally(() => setLoading(false));
       const data = response.data.results;
+      data.map(
+        (item: PokemonProps, index: number) => (item.id = offset + 1 + index)
+      );
 
       setPokemons(data);
     }
@@ -99,12 +105,14 @@ export default function Home() {
         </div>
       </form>
 
+      <PokemonModal />
+
       <div className="flex justify-center py-10">
         <h1 className="text-3xl font-bold">Pokédex</h1>
         <img src="/pokeball.png" className="h-12 px-2"></img>
       </div>
 
-      <div className="grid grid-cols-4 gap-5 px-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-3">
         {data.length > 0
           ? pokemonFilter.map((pokemon: PokemonProps) => (
               <Pokemon key={pokemon.id} pokemon={pokemon} />

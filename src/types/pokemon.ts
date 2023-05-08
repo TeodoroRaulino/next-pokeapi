@@ -1,12 +1,23 @@
 type PokemonProps = {
   id: number;
   name: string;
-  type: {
-    name: string;
-  };
-  height: number;
-  weight: number;
   url: string;
 };
 
-export default PokemonProps;
+type PokemonDetailProps = {
+  id: number;
+  name: string;
+  height: number;
+  weight: number;
+  types: PokemonType[];
+};
+
+type PokemonType = {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+};
+
+export type { PokemonProps, PokemonDetailProps };
