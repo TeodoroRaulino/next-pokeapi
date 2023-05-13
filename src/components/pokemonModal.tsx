@@ -1,9 +1,10 @@
 import { useModalStore } from "@/store/modal";
-import { PokemonProps, PokemonDetailProps } from "@/types/pokemon";
+import { PokemonDetailProps } from "@/types/pokemon";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { API_URL } from "../utils/constants";
+import pokemonColors from "@/utils/pokemonColor";
 
 export default function PokemonModal() {
   const { id, isOpen, close } = useModalStore();
@@ -13,8 +14,6 @@ export default function PokemonModal() {
   useEffect(() => {
     async function getPokemon() {
       if (!!id) {
-        console.log("id: ", id);
-
         const response = await axios.get(API_URL + id);
         setData(response.data);
       } else {
@@ -86,13 +85,15 @@ export default function PokemonModal() {
                       Tipo:
                     </h2>
                     <div>
-                      {data?.types.map((pokemon: any, _: any) => (
-                        <h2
-                          key={pokemon.type.name}
-                          className="text-center text-base leading-relaxed text-gray-500 dark:text-white"
+                      {data?.types.map((pokemon, index) => (
+                        <span
+                          className={`${
+                            pokemonColors[pokemon.type.name]
+                          } text-white text-sm font-medium mr-2 px-2.5 py-0.5 rounded`}
+                          key={index}
                         >
                           {pokemon.type.name}
-                        </h2>
+                        </span>
                       ))}
                     </div>
                   </div>
